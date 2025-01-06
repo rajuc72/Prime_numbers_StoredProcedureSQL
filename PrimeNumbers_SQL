@@ -1,0 +1,42 @@
+delimiter //
+
+create procedure find_prime_numbers()
+begin
+    declare num int default 2;
+    declare i int;
+    declare is_prime boolean;
+    declare result text default '';
+
+    -- Loop through numbers from 2 to 999
+    while num < 1000 do
+        set is_prime = true;
+        set i = 2;
+
+        -- Check if the number is prime
+        while i * i <= num do
+            if num % i = 0 then
+                set is_prime = false;
+                set i = num; -- Break out of inner loop by setting i to num
+            end if;
+            set i = i + 1;
+        end while;
+
+        -- If prime, concatenate to the result string
+        if is_prime then
+            if result = '' then
+                set result = cast(num as char);
+            else
+                set result = concat(result, '&', num);
+            end if;
+        end if;
+
+        set num = num + 1;
+    end while;
+
+    -- Print the concatenated prime numbers
+    select result as prime_numbers;
+end //
+
+delimiter ;
+
+call find_prime_numbers();
